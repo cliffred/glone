@@ -5,6 +5,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.head
@@ -30,7 +31,6 @@ import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder
 import org.eclipse.jgit.util.FS
 import java.io.Closeable
 import java.io.File
-import java.net.URLEncoder
 
 class GitlabApi(
     private val baseDir: File = File(System.getProperty("user.dir")),
@@ -45,6 +45,10 @@ class GitlabApi(
     }
 
     private val client = HttpClient(CIO) {
+        defaultRequest {
+            url("https://gitlab.com/api/v4/")
+            header("PRIVATE-TOKEN", token)
+        }
         install(ContentNegotiation) {
             jackson {
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -52,19 +56,9 @@ class GitlabApi(
         }
     }
 
-    fun getProjects(group: String): Flow<Project> = channelFlow {
-        val totalItems = getTotalItems(group)
-        val totalPages = totalItems / pageSize + 1
-
-        coroutineScope {
-            (1..totalPages).forEach { page ->
-                launch {
-                    httpCallsSemaphore.withPermit {
-                        client.fetchPage(group, pageSize, page).body<List<Project>>().forEach { send(it) }
-                    }
-                }
-            }
-        }
+    fun getProjects(group: String): Flow<Project> = getAllPages {
+        url("groups/${group.encodeURLPathPart()}/projects")
+        parameter("include_subgroups", "true")
     }
 
     suspend fun cloneProjects(projects: Flow<Project>, dispatcher: CoroutineDispatcher = Dispatchers.IO) =
@@ -100,28 +94,46 @@ class GitlabApi(
         SshSessionFactory.setInstance(sshSessionFactory)
     }
 
-    private suspend fun HttpClient.fetchPage(
-        groupId: String,
-        pageSize: Int,
-        page: Int,
-    ): HttpResponse = get {
-        queryGroupProjects(groupId, pageSize, page)
+    /**
+     * Executes an [HttpClient]'s GET request for all pages and returns a [Flow] of elements
+     * using the parameters configured in [block].
+     */
+    private inline fun <reified T> getAllPages(
+        noinline block: (HttpRequestBuilder).() -> Unit,
+    ): Flow<T> = channelFlow {
+        coroutineScope {
+            val totalItems = getTotalItems(block)
+            val totalPages = totalItems / pageSize + 1
+
+            (1..totalPages).map { page ->
+                launch {
+                    httpCallsSemaphore.withPermit {
+                        getPage(pageSize, page, block).body<List<T>>().forEach { send(it) }
+                    }
+                }
+            }
+        }
     }
 
-    private suspend fun getTotalItems(groupId: String): Int = client.head {
-        queryGroupProjects(groupId, 1, 1)
+    private suspend fun getPage(
+        pageSize: Int,
+        page: Int,
+        block: (HttpRequestBuilder).() -> Unit,
+    ): HttpResponse = client.get {
+        block()
+        pageQuery(pageSize, page)
+    }
+
+    private suspend fun getTotalItems(block: (HttpRequestBuilder).() -> Unit): Int = client.head {
+        block()
+        pageQuery(1, 1)
     }.headers["x-total"]!!.toInt()
 
-    private fun HttpRequestBuilder.queryGroupProjects(
-        groupId: String,
+    private fun HttpRequestBuilder.pageQuery(
         pageSize: Int,
         page: Int,
     ) {
-        url("https://gitlab.com/api/v4/groups/${groupId.encodeURLPathPart()}/projects")
-        header("PRIVATE-TOKEN", token)
         parameter("per_page", "$pageSize")
         parameter("page", "$page")
-        parameter("include_subgroups", "true")
-        parameter("order_by", "name")
     }
 }

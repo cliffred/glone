@@ -32,6 +32,6 @@ application {
 }
 
 tasks.getByName<JavaExec>("run") {
-    val dir = project.findProperty("dir") ?: ""
+    val dir = project.findProperty("dir") ?: System.getProperty("user.dir")
     workingDir = project.file(dir)
 }
