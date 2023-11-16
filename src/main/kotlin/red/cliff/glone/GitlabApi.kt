@@ -1,6 +1,7 @@
 package red.cliff.glone
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.jcraft.jsch.Session
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -27,8 +28,8 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.SshSessionFactory
-import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder
-import org.eclipse.jgit.util.FS
+import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host
 import java.io.Closeable
 import java.io.File
 
@@ -85,13 +86,11 @@ class GitlabApi(
      * Required for JGit to use the SSH keys from the ~/.ssh directory.
      */
     private fun setupSshSessionFactory() {
-        val sshSessionFactory = SshdSessionFactoryBuilder()
-            .setPreferredAuthentications("publickey")
-            .setHomeDirectory(FS.DETECTED.userHome())
-            .setSshDirectory(File(FS.DETECTED.userHome(), ".ssh"))
-            .build(null)
-
-        SshSessionFactory.setInstance(sshSessionFactory)
+        SshSessionFactory.setInstance(object : JschConfigSessionFactory() {
+            override fun configure(host: Host, session: Session) {
+                session.setConfig("StrictHostKeyChecking", "no")
+            }
+        })
     }
 
     /**
