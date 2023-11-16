@@ -7,7 +7,7 @@ import kotlinx.coroutines.sync.Semaphore
 
 suspend fun main(groups: Array<String>) {
     val httpCallsSemaphore = Semaphore(10)
-    val gitClonesSemaphore = Semaphore(10)
+    val gitClonesSemaphore = Semaphore(100)
 
     GitlabApi(
         httpCallsSemaphore = httpCallsSemaphore,
