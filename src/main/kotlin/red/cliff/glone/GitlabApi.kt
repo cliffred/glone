@@ -12,6 +12,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.encodeURLPathPart
 import io.ktor.serialization.jackson.jackson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -116,9 +117,7 @@ class GitlabApi(
         pageSize: Int,
         page: Int,
     ) {
-        url("https://gitlab.com/api/v4/groups/${URLEncoder.encode(groupId, "UTF-8")}/projects")
-//        url("http://localhost:6666/api/v4/groups/${URLEncoder.encode(groupId, "UTF-8")}/projects")
-
+        url("https://gitlab.com/api/v4/groups/${groupId.encodeURLPathPart()}/projects")
         header("PRIVATE-TOKEN", token)
         parameter("per_page", "$pageSize")
         parameter("page", "$page")
