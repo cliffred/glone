@@ -16,16 +16,12 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.encodeURLPathPart
 import io.ktor.serialization.jackson.jackson
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.withContext
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.SshSessionFactory
 import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory
@@ -34,7 +30,6 @@ import java.io.Closeable
 import java.io.File
 
 class GitlabApi(
-    private val baseDir: File = File(System.getProperty("user.dir")),
     private val token: String = System.getenv("GITLAB_TOKEN"),
     private val pageSize: Int = 10,
     private val httpCallsSemaphore: Semaphore = Semaphore(10),
@@ -62,20 +57,12 @@ class GitlabApi(
         parameter("include_subgroups", "true")
     }
 
-    suspend fun cloneProjects(projects: Flow<Project>, dispatcher: CoroutineDispatcher = Dispatchers.IO) =
-        withContext(dispatcher) {
-            projects.filter { !it.archived }.collect { project ->
-                val repoDir = baseDir.resolve(project.path_with_namespace)
-                if (!repoDir.exists()) {
-                    launch {
-                        gitClonesSemaphore.withPermit {
-                            Git.cloneRepository().setURI(project.ssh_url_to_repo).setDirectory(repoDir).call()
-                            println("Cloned ${project.path_with_namespace}")
-                        }
-                    }
-                }
-            }
+    suspend fun cloneProject(project: Project, repoDir: File) {
+        gitClonesSemaphore.withPermit {
+            Git.cloneRepository().setURI(project.sshUrlToRepo).setDirectory(repoDir).call()
+            println("Cloned ${project.pathWithNamespace}")
         }
+    }
 
     override fun close() {
         client.close()
