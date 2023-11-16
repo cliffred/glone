@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.20"
     application
+    id("org.graalvm.buildtools.native") version "0.9.28"
 }
 
 group = "red.cliff"
@@ -27,11 +28,31 @@ kotlin {
     jvmToolchain(21)
 }
 
-application {
-    mainClass.set("red.cliff.glone.MainKt")
-}
-
-tasks.getByName<JavaExec>("run") {
+tasks.named<JavaExec>("run") {
+    outputs.upToDateWhen { false }
     val dir = project.findProperty("dir") ?: System.getProperty("user.dir")
     workingDir = project.file(dir)
+}
+
+application {
+    mainClass = "red.cliff.glone.MainKt"
+    applicationName = project.name
+}
+
+graalvmNative {
+    metadataRepository {
+        enabled = true
+    }
+    binaries {
+        named("main") {
+            imageName = project.name
+        }
+    }
+    agent {
+        metadataCopy {
+            inputTaskNames.add("run")
+            outputDirectories.add("src/main/resources/META-INF/native-image")
+            mergeWithExisting = true
+        }
+    }
 }
