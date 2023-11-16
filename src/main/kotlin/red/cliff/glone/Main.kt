@@ -14,9 +14,9 @@ suspend fun main(groups: Array<String>) {
         gitClonesSemaphore = gitClonesSemaphore,
     ).use { api ->
         coroutineScope {
-            groups.forEach { name ->
+            groups.forEach { group ->
                 launch {
-                    val projects: Flow<Project> = api.getProjects(name)
+                    val projects: Flow<Project> = api.getProjects(group)
                     api.cloneProjects(projects)
                 }
             }
