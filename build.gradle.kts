@@ -16,7 +16,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
+    runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
 }
 
 tasks.test {
