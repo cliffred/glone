@@ -126,7 +126,7 @@ class GitlabApi(
     private suspend fun getTotalItems(block: (HttpRequestBuilder).() -> Unit): Int = client.head {
         block()
         pageQuery(1, 1)
-    }.headers["x-total"]!!.toInt()
+    }.headers["x-total"]?.toInt() ?: 0
 
     private fun HttpRequestBuilder.pageQuery(
         pageSize: Int,
