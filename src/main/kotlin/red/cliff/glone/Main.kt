@@ -3,7 +3,7 @@ package red.cliff.glone
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.withContext
@@ -11,27 +11,33 @@ import java.io.File
 
 suspend fun main(groups: Array<String>) {
     val httpCallsSemaphore = Semaphore(10)
-    val gitClonesSemaphore = Semaphore(100)
+    val gitOperationsSemaphore = Semaphore(50)
+
+    val git = GitApi(gitOperationsSemaphore)
 
     val workDir = File(System.getProperty("user.dir"))
-    val existingGitDirs = workDir.walkTopDown().filter { it.isDirectory && it.resolve(".git").exists() }.toHashSet()
+    val existingGitDirs = workDir
+        .walkTopDown()
+        .filter { it.isDirectory && it.resolve(".git").exists() }
+        .toHashSet()
     val fetchedGitDirs: MutableSet<File> = mutableSetOf()
 
     GitlabApi(
         httpCallsSemaphore = httpCallsSemaphore,
-        gitClonesSemaphore = gitClonesSemaphore,
-    ).use { api ->
+    ).use { gitlab ->
         coroutineScope {
             groups.forEach { group ->
                 launch {
-                    val projects: Flow<Project> = api.getProjects(group)
+                    val projects: Flow<Project> = gitlab.getProjects(group)
                     withContext(Dispatchers.IO) {
                         projects.filterNot { it.archived || it.emptyRepo }.collect { project ->
                             val repoDir = workDir.resolve(project.pathWithNamespace)
                             fetchedGitDirs += repoDir
-                            if (repoDir !in existingGitDirs) {
-                                launch {
-                                    api.cloneProject(project, repoDir)
+                            launch {
+                                if (repoDir !in existingGitDirs) {
+                                    git.cloneProject(workDir, project)
+                                } else {
+                                    git.pullProject(workDir, project)
                                 }
                             }
                         }

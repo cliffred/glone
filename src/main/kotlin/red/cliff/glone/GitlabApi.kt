@@ -1,7 +1,6 @@
 package red.cliff.glone
 
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.jcraft.jsch.Session
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -22,23 +21,13 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.transport.SshSessionFactory
-import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory
-import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host
 import java.io.Closeable
-import java.io.File
 
 class GitlabApi(
     private val token: String = System.getenv("GITLAB_TOKEN"),
     private val pageSize: Int = 10,
     private val httpCallsSemaphore: Semaphore = Semaphore(10),
-    private val gitClonesSemaphore: Semaphore = Semaphore(10),
 ) : Closeable {
-
-    init {
-        setupSshSessionFactory()
-    }
 
     private val client = HttpClient(CIO) {
         defaultRequest {
@@ -57,27 +46,8 @@ class GitlabApi(
         parameter("include_subgroups", "true")
     }
 
-    suspend fun cloneProject(project: Project, repoDir: File) {
-        gitClonesSemaphore.withPermit {
-            Git.cloneRepository().setURI(project.sshUrlToRepo).setDirectory(repoDir).call()
-            println("Cloned ${project.pathWithNamespace}")
-        }
-    }
-
     override fun close() {
         client.close()
-    }
-
-    /**
-     * Sets up the SSH session factory.
-     * Required for JGit to use the SSH keys from the ~/.ssh directory.
-     */
-    private fun setupSshSessionFactory() {
-        SshSessionFactory.setInstance(object : JschConfigSessionFactory() {
-            override fun configure(host: Host, session: Session) {
-                session.setConfig("StrictHostKeyChecking", "no")
-            }
-        })
     }
 
     /**

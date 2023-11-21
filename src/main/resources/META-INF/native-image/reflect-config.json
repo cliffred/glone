@@ -94,139 +94,11 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.jcraft.jsch.DHEC256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.DHEC384",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.DHEC521",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.DHG14",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.UserAuthNone",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.UserAuthPublicKey",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES128CBC",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES128CTR",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES192CBC",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES192CTR",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES256CBC",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.AES256CTR",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.DH",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.ECDHN",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.HMACSHA1",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.MD5",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.Random",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SHA1",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SHA256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SHA384",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SHA512",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SignatureECDSA256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SignatureECDSA384",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SignatureECDSA521",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.SignatureRSA",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.jcraft.jsch.jce.TripleDESCTR",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.AESCipher$General",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DESedeCipher",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DESedeKeyFactory",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DHKeyAgreement",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DHKeyPairGenerator",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"com.sun.crypto.provider.GaloisCounterMode$AESGCM",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.crypto.provider.HmacCore$HmacSHA256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.HmacSHA1",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -358,9 +230,6 @@
   "name":"java.security.KeyStoreSpi"
 },
 {
-  "name":"java.security.MessageDigestSpi"
-},
-{
   "name":"java.security.SecureRandomParameters"
 },
 {
@@ -408,12 +277,6 @@
 {
   "name":"java.util.concurrent.atomic.Striped64",
   "fields":[{"name":"base"}, {"name":"cellsBusy"}]
-},
-{
-  "name":"javax.crypto.interfaces.DHPrivateKey"
-},
-{
-  "name":"javax.crypto.interfaces.DHPublicKey"
 },
 {
   "name":"javax.security.auth.x500.X500Principal",
@@ -550,48 +413,11 @@
   "fields":[{"name":"_availablePermits"}, {"name":"deqIdx"}, {"name":"enqIdx"}, {"name":"head"}, {"name":"tail"}]
 },
 {
-  "name":"org.eclipse.jgit.internal.JGitText",
-  "allPublicFields":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$AutoCRLF",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$CheckStat",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$EOL",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$HideDotFiles",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$LogRefUpdates",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$SymLinks",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.lib.CoreConfig$TrustPackedRefsStat",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
-  "name":"org.eclipse.jgit.util.sha1.SHA1$Sha1Implementation",
-  "methods":[{"name":"values","parameterTypes":[] }]
-},
-{
   "name":"red.cliff.glone.Project",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true,
   "queryAllDeclaredConstructors":true,
-  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean"] }, {"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","int","kotlin.jvm.internal.DefaultConstructorMarker"] }, {"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean"] }, {"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","int","kotlin.jvm.internal.DefaultConstructorMarker"] }]
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean"] }, {"name":"<init>","parameterTypes":["java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","java.lang.String","boolean","boolean","int","kotlin.jvm.internal.DefaultConstructorMarker"] }]
 },
 {
   "name":"sun.security.pkcs12.PKCS12KeyStore",
@@ -599,10 +425,6 @@
 },
 {
   "name":"sun.security.pkcs12.PKCS12KeyStore$DualFormatPKCS12",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"sun.security.provider.MD5",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -618,14 +440,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"sun.security.provider.SHA5$SHA384",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"sun.security.provider.SHA5$SHA512",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"sun.security.provider.X509Factory",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -638,15 +452,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"sun.security.rsa.RSASignature$SHA1withRSA",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"sun.security.rsa.RSASignature$SHA256withRSA",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"sun.security.rsa.RSASignature$SHA384withRSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
