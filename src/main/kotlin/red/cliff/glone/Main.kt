@@ -26,7 +26,7 @@ suspend fun main(groups: Array<String>) {
                 launch {
                     val projects: Flow<Project> = api.getProjects(group)
                     withContext(Dispatchers.IO) {
-                        projects.filter { !it.archived }.collect { project ->
+                        projects.filterNot { it.archived || it.emptyRepo }.collect { project ->
                             val repoDir = workDir.resolve(project.pathWithNamespace)
                             fetchedGitDirs += repoDir
                             if (repoDir !in existingGitDirs) {

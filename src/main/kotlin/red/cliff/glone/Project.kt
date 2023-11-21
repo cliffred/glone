@@ -15,4 +15,5 @@ data class Project(
     val sshUrlToRepo: String,
     val webUrl: String,
     val archived: Boolean,
+    val emptyRepo: Boolean,
 )
