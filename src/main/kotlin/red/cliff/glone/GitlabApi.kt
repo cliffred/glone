@@ -15,13 +15,13 @@ import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.encodeURLPathPart
 import io.ktor.serialization.jackson.jackson
+import java.io.Closeable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import java.io.Closeable
 
 class GitlabApi(
     private val token: String = System.getenv("GITLAB_TOKEN"),
@@ -29,17 +29,16 @@ class GitlabApi(
     private val httpCallsSemaphore: Semaphore = Semaphore(10),
 ) : Closeable {
 
-    private val client = HttpClient(CIO) {
-        defaultRequest {
-            url("https://gitlab.com/api/v4/")
-            header("PRIVATE-TOKEN", token)
-        }
-        install(ContentNegotiation) {
-            jackson {
-                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    private val client =
+        HttpClient(CIO) {
+            defaultRequest {
+                url("https://gitlab.com/api/v4/")
+                header("PRIVATE-TOKEN", token)
+            }
+            install(ContentNegotiation) {
+                jackson { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
             }
         }
-    }
 
     fun getProjects(group: String): Flow<Project> = getAllPages {
         url("groups/${group.encodeURLPathPart()}/projects")
@@ -51,8 +50,8 @@ class GitlabApi(
     }
 
     /**
-     * Executes an [HttpClient]'s GET request for all pages and returns a [Flow] of elements
-     * using the parameters configured in [block].
+     * Executes an [HttpClient]'s GET request for all pages and returns a [Flow] of elements using
+     * the parameters configured in [block].
      */
     private inline fun <reified T> getAllPages(
         noinline block: (HttpRequestBuilder).() -> Unit,
@@ -75,15 +74,20 @@ class GitlabApi(
         pageSize: Int,
         page: Int,
         block: (HttpRequestBuilder).() -> Unit,
-    ): HttpResponse = client.get {
-        block()
-        pageQuery(pageSize, page)
-    }
+    ): HttpResponse =
+        client.get {
+            block()
+            pageQuery(pageSize, page)
+        }
 
-    private suspend fun getTotalItems(block: (HttpRequestBuilder).() -> Unit): Int = client.head {
-        block()
-        pageQuery(1, 1)
-    }.headers["x-total"]?.toInt() ?: 0
+    private suspend fun getTotalItems(block: (HttpRequestBuilder).() -> Unit): Int =
+        client
+            .head {
+                block()
+                pageQuery(1, 1)
+            }
+            .headers["x-total"]
+            ?.toInt() ?: 0
 
     private fun HttpRequestBuilder.pageQuery(
         pageSize: Int,
