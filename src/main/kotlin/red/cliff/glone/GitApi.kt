@@ -9,29 +9,20 @@ class GitApi(
     private val gitOperationsSemaphore: Semaphore = Semaphore(10),
 ) {
 
-    suspend fun cloneProject(workDir: File, project: Project) {
+    suspend fun cloneProject(workDir: File, project: Project): Result<Unit> {
         val repoDir = project.getRepoDir(workDir)
-        gitCommand(
-                workDir,
-                "clone",
-                "--filter=blob:none",
-                project.sshUrlToRepo,
-                repoDir.absolutePath
-            )
-            .onSuccess { println("Cloned ${project.pathWithNamespace}") }
-            .onFailure {
-                repoDir.deleteRecursively()
-                System.err.println("Error cloning ${project.pathWithNamespace}:\n${it.message}")
-            }
+        return gitCommand(
+            workDir,
+            "clone",
+            "--filter=blob:none",
+            project.sshUrlToRepo,
+            repoDir.absolutePath
+        )
     }
 
-    suspend fun pullProject(workDir: File, project: Project) {
+    suspend fun pullProject(workDir: File, project: Project): Result<Unit> {
         val repoDir = project.getRepoDir(workDir)
-        gitCommand(repoDir, "pull", "--rebase")
-            .onSuccess { println("Pulled ${project.pathWithNamespace}") }
-            .onFailure {
-                System.err.println("Error pulling ${project.pathWithNamespace}:\n${it.message}")
-            }
+        return gitCommand(repoDir, "pull", "--rebase")
     }
 
     private fun Project.getRepoDir(workDir: File) = workDir.resolve(pathWithNamespace)

@@ -17,3 +17,8 @@ data class Project(
     val archived: Boolean,
     val emptyRepo: Boolean,
 )
+
+data class ProjectResult<T>(
+    val project: Project,
+    val result: Result<T>,
+)
