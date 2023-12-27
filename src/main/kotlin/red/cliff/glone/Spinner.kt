@@ -1,34 +1,36 @@
 package red.cliff.glone
 
+import kotlin.math.max
 import kotlin.time.Duration
 import kotlinx.coroutines.delay
 
 class Spinner(private val delay: Duration) {
     private val states = listOf("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
     private var running = false
-    private var latestText = ""
-    private var maxLength = 0
+    private var currentText = ""
+    private var lastPrintedLength = 0
 
     suspend fun start(initialText: String = "") {
-        latestText = initialText
+        setText(initialText)
         running = true
         var i = 0
         while (running) {
             val state = states[i % states.size]
-            clear()
-            echo("\r$state $latestText", trailingNewline = false)
+            val message = "$state $currentText"
+            val whiteSpace = " ".repeat(max(0, lastPrintedLength - message.length))
+            echo("\r$message$whiteSpace", trailingNewline = false)
+            lastPrintedLength = message.length
             delay(delay.inWholeMilliseconds)
-            i++
+            if (++i >= states.size) i = 0
         }
     }
 
     fun setText(text: String) {
-        synchronized(this) { maxLength = maxOf(maxLength, text.length) }
-        latestText = text
+        currentText = text
     }
 
-    fun clear() {
-        echo("\r${" ".repeat(maxLength + 2)}\r", trailingNewline = false)
+    private fun clear() {
+        echo("\r${" ".repeat(lastPrintedLength)}\r", trailingNewline = false)
     }
 
     fun stop() {
