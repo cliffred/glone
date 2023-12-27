@@ -20,7 +20,7 @@ class Spinner(private val delay: Duration) {
             val whiteSpace = " ".repeat(max(0, lastPrintedLength - message.length))
             echo("\r$message$whiteSpace", trailingNewline = false)
             lastPrintedLength = message.length
-            delay(delay.inWholeMilliseconds)
+            delay(delay)
             if (++i >= states.size) i = 0
         }
     }

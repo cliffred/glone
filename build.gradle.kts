@@ -9,16 +9,23 @@ version = "1.0-SNAPSHOT"
 
 dependencies {
     val ktorVersion = "2.3.6"
+    val kotestVersion = "5.8.0"
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
+
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("ch.qos.logback:logback-classic:1.4.11")
 }
 
 tasks.test {
     useJUnitPlatform()
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
 
 kotlin {
