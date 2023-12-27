@@ -26,8 +26,10 @@ import kotlinx.coroutines.sync.withPermit
 class GitlabApi(
     private val token: String = System.getenv("GITLAB_TOKEN"),
     private val pageSize: Int = 10,
-    private val httpCallsSemaphore: Semaphore = Semaphore(10),
+    maxConcurrentCalls: Int = 10,
 ) : Closeable {
+
+    private val httpCallsSemaphore= Semaphore(maxConcurrentCalls)
 
     private val client =
         HttpClient(CIO) {

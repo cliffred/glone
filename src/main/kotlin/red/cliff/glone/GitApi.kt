@@ -5,9 +5,9 @@ import java.io.File
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
-class GitApi(
-    private val gitOperationsSemaphore: Semaphore = Semaphore(10),
-) {
+class GitApi(maxConcurrentGitOperations: Int = 10) {
+
+    private val gitOperationsSemaphore: Semaphore = Semaphore(maxConcurrentGitOperations)
 
     suspend fun cloneProject(workDir: File, project: Project): Result<Unit> {
         val repoDir = project.getRepoDir(workDir)
