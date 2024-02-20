@@ -18,6 +18,8 @@ class GloneApp(
     private val gitDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun glone(groups: Array<String>) = coroutineScope {
+        launch { spinner.start("fetching projects...") }
+
         val existingGitDirs =
             workDir
                 .walkTopDown()
@@ -27,8 +29,6 @@ class GloneApp(
         val fetchedGitDirs: MutableSet<File> = mutableSetOf()
         val cloneResults = mutableListOf<ProjectResult<Unit>>()
         val pullResults = mutableListOf<ProjectResult<Unit>>()
-
-        launch { spinner.start("fetching projects...") }
 
         gitlabApi.use { gitlab ->
             coroutineScope {
