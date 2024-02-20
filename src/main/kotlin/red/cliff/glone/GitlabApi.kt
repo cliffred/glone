@@ -40,6 +40,7 @@ class GitlabApi(
             install(ContentNegotiation) {
                 jackson { configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) }
             }
+            expectSuccess = true
         }
 
     fun getProjects(group: String): Flow<Project> = getAllPages {
