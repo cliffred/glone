@@ -37,8 +37,10 @@ fun String.slugify(): String =
 
 class CapturingOutputConsole : OutputConsole {
     private val outputBuffer = StringBuilder()
+    private val ansi = "\u001B"
 
     override fun print(text: String, error: Boolean) {
+        if (text.startsWith(ansi)) return
         val msg =
             text.replace("\r", "") +
                 if ('\r' in text && !text.endsWith(lineSeparator)) lineSeparator else ""
