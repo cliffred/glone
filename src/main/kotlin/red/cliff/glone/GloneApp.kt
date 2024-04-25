@@ -37,7 +37,7 @@ class GloneApp(
                         val projects: Flow<Project> = gitlab.getProjects(group)
                         withContext(gitDispatcher) {
                             projects
-                                .filterNot { it.archived || it.emptyRepo }
+                                .filterNot { it.archived }
                                 .collect { project ->
                                     val repoDir = workDir.resolve(project.pathWithNamespace)
                                     fetchedGitDirs += repoDir
@@ -45,7 +45,7 @@ class GloneApp(
                                         if (repoDir !in existingGitDirs) {
                                             val result = git.cloneProject(workDir, project)
                                             cloneResults += ProjectResult(project, result)
-                                        } else {
+                                        } else if (!project.emptyRepo) {
                                             val result = git.pullProject(workDir, project)
                                             pullResults += ProjectResult(project, result)
                                         }
