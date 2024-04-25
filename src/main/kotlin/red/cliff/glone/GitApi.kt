@@ -16,13 +16,17 @@ class GitApi(maxConcurrentGitOperations: Int = 10) {
             "clone",
             "--filter=blob:none",
             project.sshUrlToRepo,
-            repoDir.absolutePath
+            repoDir.absolutePath,
         )
     }
 
     suspend fun pullProject(workDir: File, project: Project): Result<Unit> {
         val repoDir = project.getRepoDir(workDir)
-        return gitCommand(repoDir, "pull", "--rebase")
+
+        gitCommand(repoDir, "fetch").onFailure { return Result.failure(it) }
+        return gitCommand(repoDir, "rebase").recover {
+            gitCommand(repoDir, "rebase", "--abort")
+        }
     }
 
     private fun Project.getRepoDir(workDir: File) = workDir.resolve(pathWithNamespace)
