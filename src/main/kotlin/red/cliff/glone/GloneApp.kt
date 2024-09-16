@@ -76,7 +76,7 @@ class GloneApp(
             clonedProjects.forEach { echo("  $it") }
         }
         echo("Pulled ${pullResults.filter { it.result.isSuccess }.size} projects")
-        val removedRepos = (existingGitDirs - fetchedGitDirs).map { it.relativeTo(workDir) }
+        val removedRepos = (existingGitDirs - fetchedGitDirs).map { it.relativeTo(workDir) }.sorted()
         if (removedRepos.isNotEmpty()) {
             echo(
                 "${removedRepos.size} repositories don't exist anymore, you can remove them with the following command:"
