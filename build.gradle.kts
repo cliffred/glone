@@ -8,7 +8,7 @@ group = "red.cliff"
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    val ktorVersion = "2.3.8"
+    val ktorVersion = "3.3.1"
     val kotestVersion = "5.8.0"
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
