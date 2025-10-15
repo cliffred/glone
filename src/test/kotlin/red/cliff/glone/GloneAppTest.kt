@@ -35,7 +35,8 @@ class GloneAppTest :
                 val git: GitApi = mockk(relaxed = true)
                 val workDir = tempdir()
                 workDir.resolve("${projects[1].pathWithNamespace}/.git").mkdirs()
-                workDir.resolve("is/removed/.git").mkdirs()
+                workDir.resolve("is/removed1/.git").mkdirs()
+                workDir.resolve("is/removed2/.git").mkdirs()
 
                 val spinner = Spinner(1.seconds)
 
@@ -69,8 +70,10 @@ class GloneAppTest :
                       foo/bar/sparkquest
                       foo/bar/techrise
                     Pulled 1 projects
-                    1 repositories don't exist anymore, you can remove them with the following command:
-                    rm -rf is/removed
+                    2 repositories don't exist anymore, you can remove them with the following command:
+                    rm -rf \
+                      is/removed1 \
+                      is/removed2
                     
 
                 """

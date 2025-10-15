@@ -81,7 +81,8 @@ class GloneApp(
             echo(
                 "${removedRepos.size} repositories don't exist anymore, you can remove them with the following command:"
             )
-            echo("rm -rf ${removedRepos.joinToString(" \\\n")}")
+            echo("rm -rf \\")
+            echo("  ${removedRepos.joinToString(" \\\n  ")}")
             echo()
         }
         cloneResults.forEach { result ->
