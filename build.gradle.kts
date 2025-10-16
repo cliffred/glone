@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "2.2.20"
     application
-    id("org.graalvm.buildtools.native") version "0.11.1"
+    id("org.graalvm.buildtools.native") version "0.11.2"
 }
 
 group = "red.cliff"
