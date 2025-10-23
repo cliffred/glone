@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.2.21"
     application
-    id("org.graalvm.buildtools.native") version "0.11.1"
+    id("org.graalvm.buildtools.native") version "0.11.2"
 }
 
 group = "red.cliff"
@@ -15,12 +15,12 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
-    runtimeOnly("ch.qos.logback:logback-classic:1.5.19")
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.20")
 
     testImplementation("io.mockk:mockk:1.14.6")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("ch.qos.logback:logback-classic:1.5.19")
+    testImplementation("ch.qos.logback:logback-classic:1.5.20")
 }
 
 tasks.test {
