@@ -19,3 +19,17 @@ The native image will be in `build/native/nativeCompile/glone`. You can copy thi
 glone GROUP_A GROUP_B/SUBGROUP_B
 ```
 This will clone all projects in the specified groups and subgroups into a directory structure representing the gitlab namespace, relative to your current working directory.
+
+### From a script
+```shell
+#! /usr/bin/env sh
+
+CURRENT_DIR=$( pwd )
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+cd "$SCRIPT_DIR"
+
+glone GROUP_A GROUP_B/SUBGROUP_B
+
+cd "$CURRENT_DIR"
+```
