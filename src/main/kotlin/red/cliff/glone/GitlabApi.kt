@@ -24,6 +24,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
 class GitlabApi(
+    private val apiHost: String = "gitlab.com",
     private val token: String = System.getenv("GITLAB_TOKEN"),
     private val pageSize: Int = 10,
     maxConcurrentCalls: Int = 10,
@@ -34,7 +35,7 @@ class GitlabApi(
     private val client =
         HttpClient(CIO) {
             defaultRequest {
-                url("https://gitlab.com/api/v4/")
+                url("https://$apiHost/api/v4/")
                 header("PRIVATE-TOKEN", token)
             }
             install(ContentNegotiation) {

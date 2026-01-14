@@ -13,7 +13,7 @@ class GitlabApiTest :
             val gitlabApi = GitlabApi()
 
             gitlabApi
-                .getProjects("EDSN/car-alm")
+                .getProjects("foo")
                 .filterNot { it.archived || it.emptyRepo }
                 .onEach { println(it) }
                 .take(5)

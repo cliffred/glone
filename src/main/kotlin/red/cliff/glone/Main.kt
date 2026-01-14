@@ -5,7 +5,11 @@ suspend fun main(groups: Array<String>) {
     val maxConcurrentGitOperations = 50
 
     val git = GitApi(maxConcurrentGitOperations)
-    val gitlabApi = GitlabApi(maxConcurrentCalls = maxConcurrentGitlabCalls)
+
+    val gitlabApi = GitlabApi(
+        apiHost = System.getenv("GITLAB_HOST") ?: "gitlab.com",
+        maxConcurrentCalls = maxConcurrentGitlabCalls,
+    )
 
     val gloneApp = GloneApp(gitlabApi, git)
 

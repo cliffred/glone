@@ -24,6 +24,8 @@ This will clone all projects in the specified groups and subgroups into a direct
 ```shell
 #! /usr/bin/env sh
 
+#export GITLAB_HOST=gitlab.acme.io
+
 CURRENT_DIR=$( pwd )
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
