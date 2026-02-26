@@ -1,6 +1,7 @@
 package red.cliff.glone
 
 import java.io.File
+import kotlin.io.readlnOrNull
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -76,13 +77,24 @@ class GloneApp(
             clonedProjects.forEach { echo("  $it") }
         }
         echo("Pulled ${pullResults.filter { it.result.isSuccess }.size} projects")
-        val removedRepos = (existingGitDirs - fetchedGitDirs).map { it.relativeTo(workDir) }.sorted()
+        val removedRepos = (existingGitDirs - fetchedGitDirs).sortedBy { it.path }
         if (removedRepos.isNotEmpty()) {
-            echo(
-                "${removedRepos.size} repositories don't exist anymore, you can remove them with the following command:"
-            )
-            echo("rm -rf \\")
-            echo("  ${removedRepos.joinToString(" \\\n  ")}")
+            echo()
+            echo("${removedRepos.size} repositories don't exist anymore on GitLab.")
+            removedRepos.forEach { repo ->
+                echo(
+                    "Delete local repository ${repo.relativeTo(workDir)}? (y/N) ",
+                    trailingNewline = false,
+                )
+                val answer = readlnOrNull()
+                if (answer.equals("y", ignoreCase = true)) {
+                    if (repo.deleteRecursively()) {
+                        echo(" > Deleted.")
+                    } else {
+                        echo(" > Failed to delete.", error = true)
+                    }
+                }
+            }
             echo()
         }
         cloneResults.forEach { result ->

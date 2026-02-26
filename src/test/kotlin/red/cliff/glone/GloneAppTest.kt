@@ -70,12 +70,10 @@ class GloneAppTest :
                       foo/bar/sparkquest
                       foo/bar/techrise
                     Pulled 1 projects
-                    2 repositories don't exist anymore, you can remove them with the following command:
-                    rm -rf \
-                      is/removed1 \
-                      is/removed2
                     
-
+                    2 repositories don't exist anymore on GitLab.
+                    Delete local repository is/removed1? (y/N) Delete local repository is/removed2? (y/N) 
+                    
                 """
                         .trimIndent()
             }
