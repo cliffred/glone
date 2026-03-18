@@ -22,16 +22,20 @@ This will clone all projects in the specified groups and subgroups into a direct
 
 ### From a script
 ```shell
-#! /usr/bin/env sh
+#!/usr/bin/env sh
+set -eu
 
 #export GITLAB_HOST=gitlab.acme.io
 
-CURRENT_DIR=$( pwd )
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+CURRENT_DIR=$(pwd)
+
+SCRIPT_DIR=$(
+  CDPATH= cd -- "$(dirname -- "$0")" >/dev/null 2>&1 && pwd
+)
+  
+trap 'cd "$CURRENT_DIR"' EXIT
 
 cd "$SCRIPT_DIR"
 
 glone GROUP_A GROUP_B/SUBGROUP_B
-
-cd "$CURRENT_DIR"
 ```
