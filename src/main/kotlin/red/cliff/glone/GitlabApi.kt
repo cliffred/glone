@@ -64,7 +64,7 @@ class GitlabApi(
             val totalItems = getTotalItems(block)
             val totalPages = totalItems / pageSize + 1
 
-            (1..totalPages).map { page ->
+            (1..totalPages).forEach { page ->
                 launch {
                     httpCallsSemaphore.withPermit {
                         getPage(pageSize, page, block).body<List<T>>().forEach { send(it) }

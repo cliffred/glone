@@ -26,6 +26,8 @@ This will clone all projects in the specified groups and subgroups into a direct
 set -eu
 
 #export GITLAB_HOST=gitlab.acme.io
+#export MAX_CONCURRENT_GITLAB_CALLS=10
+#export MAX_CONCURRENT_GIT_OPERATIONS=50
 
 CURRENT_DIR=$(pwd)
 

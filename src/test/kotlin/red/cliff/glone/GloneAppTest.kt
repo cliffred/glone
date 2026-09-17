@@ -6,12 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlin.coroutines.ContinuationInterceptor
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
-@OptIn(ExperimentalStdlibApi::class)
 class GloneAppTest :
     ShouldSpec(
         {
@@ -46,7 +46,7 @@ class GloneAppTest :
                         git,
                         workDir,
                         spinner,
-                        coroutineContext[CoroutineDispatcher.Key]!!
+                        coroutineContext[ContinuationInterceptor] as CoroutineDispatcher,
                     )
 
                 gloneApp.glone(arrayOf("foo/bar"))
