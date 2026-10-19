@@ -12,11 +12,13 @@ dependencies {
     val kotestVersion = "6.2.5"
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("com.github.ajalt.clikt:clikt-core:5.1.0")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.6.4")
 
+    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("io.mockk:mockk:1.14.11")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")

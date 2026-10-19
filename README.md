@@ -5,7 +5,7 @@ CLI for quickly cloning Gitlab projects
 ```shell
 # glone uses your current work dir as the base for cloning, each project will be cloned into a directory structure representing the gitlab namespace
 # Use -Pdir to specify a different base directory, this must exist before running glone.
-./gradlew run --args="GROUP_A GROUP_B/SUBGROUP_B" -Pdir=/path/to/clone/to
+./gradlew run --args="-g GROUP_A -g GROUP_B/SUBGROUP_B -p GROUP_C/PROJECT_C" -Pdir=/path/to/clone/to
 ```
 
 ## Build GraalVM native image
@@ -16,9 +16,15 @@ The native image will be in `build/native/nativeCompile/glone`. You can copy thi
 
 ## Usage
 ```shell
-glone GROUP_A GROUP_B/SUBGROUP_B
+glone -g GROUP_A -g GROUP_B/SUBGROUP_B -p GROUP_C/PROJECT_C
 ```
-This will clone all projects in the specified groups and subgroups into a directory structure representing the gitlab namespace, relative to your current working directory.
+This will clone all projects in the specified groups and subgroups and individual projects into a directory structure representing the gitlab namespace, relative to your current working directory.
+
+### Options
+- `-g, --group <name>`: GitLab group to sync (can be specified multiple times)
+- `-p, --project <path>`: GitLab project to sync (can be specified multiple times)
+- `--max-concurrent-gitlab-calls <n>`: Maximum concurrent GitLab API calls (default: 10)
+- `--max-concurrent-git-operations <n>`: Maximum concurrent Git operations (default: 50)
 
 ### From a script
 ```shell
@@ -26,8 +32,6 @@ This will clone all projects in the specified groups and subgroups into a direct
 set -eu
 
 #export GITLAB_HOST=gitlab.acme.io
-#export MAX_CONCURRENT_GITLAB_CALLS=10
-#export MAX_CONCURRENT_GIT_OPERATIONS=50
 
 CURRENT_DIR=$(pwd)
 
@@ -39,5 +43,5 @@ trap 'cd "$CURRENT_DIR"' EXIT
 
 cd "$SCRIPT_DIR"
 
-glone GROUP_A GROUP_B/SUBGROUP_B
+glone -g GROUP_A -g GROUP_B/SUBGROUP_B -p GROUP_C/PROJECT_C
 ```

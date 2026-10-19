@@ -3,7 +3,9 @@ package red.cliff.glone
 import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.HttpRequestBuilder
@@ -13,6 +15,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.encodeURLPathPart
 import io.ktor.serialization.jackson.jackson
 import java.io.Closeable
@@ -24,16 +27,17 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 
 class GitlabApi(
-    private val apiHost: String = "gitlab.com",
-    private val token: String = System.getenv("GITLAB_TOKEN"),
+    private val apiHost: String = System.getenv("GITLAB_HOST") ?: "gitlab.com",
+    private val token: String = System.getenv("GITLAB_TOKEN") ?: "",
     private val pageSize: Int = 10,
     maxConcurrentCalls: Int = 10,
+    engine: HttpClientEngine = CIO.create(),
 ) : Closeable {
 
-    private val httpCallsSemaphore= Semaphore(maxConcurrentCalls)
+    private val httpCallsSemaphore = Semaphore(maxConcurrentCalls)
 
     private val client =
-        HttpClient(CIO) {
+        HttpClient(engine) {
             defaultRequest {
                 url("https://$apiHost/api/v4/")
                 header("PRIVATE-TOKEN", token)
@@ -43,6 +47,18 @@ class GitlabApi(
             }
             expectSuccess = true
         }
+
+    suspend fun getProject(project: String): Project? = httpCallsSemaphore.withPermit {
+        try {
+            client.get("projects/${project.encodeURLPathPart()}").body<Project>()
+        } catch (e: ClientRequestException) {
+            if (e.response.status == HttpStatusCode.NotFound || e.response.status == HttpStatusCode.Forbidden) {
+                null
+            } else {
+                throw e
+            }
+        }
+    }
 
     fun getProjects(group: String): Flow<Project> = getAllPages {
         url("groups/${group.encodeURLPathPart()}/projects")
